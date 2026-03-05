@@ -6,9 +6,9 @@ lucide.createIcons();
 // EmailJS configuration
 // Values sourced from .env — inlined here since this is a static site.
 // ──────────────────────────────
-const EMAILJS_SERVICE_ID  = 'service_np6ssnj';
-const EMAILJS_TEMPLATE_ID = 'template_9l7h8qj';
-const EMAILJS_PUBLIC_KEY  = 'YbL2pSvJQnCAd30RY';
+const EMAILJS_SERVICE_ID  = 'template_tnbzg2g';
+const EMAILJS_TEMPLATE_ID = 'template_tnbzg2g';
+const EMAILJS_PUBLIC_KEY  = '3UzmkdDZsSX6bfcAY';
 
 emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
@@ -268,9 +268,9 @@ document.getElementById('contact-form').addEventListener('submit', function (e) 
     btn.disabled  = true;
 
     const templateParams = {
-        user_name:  this.querySelector('[name="user_name"]').value,
-        user_email: this.querySelector('[name="user_email"]').value,
-        message:    this.querySelector('[name="message"]').value,
+        from_name: this.querySelector('[name="from_name"]').value,
+        reply_to:  this.querySelector('[name="reply_to"]').value,
+        message:   this.querySelector('[name="message"]').value,
     };
 
     emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
@@ -283,7 +283,8 @@ document.getElementById('contact-form').addEventListener('submit', function (e) 
             setTimeout(() => successMsg.classList.add('hidden'), 5000);
         })
         .catch((error) => {
-            console.error('EmailJS error:', error);
+            const reason = error && (error.text || error.message || JSON.stringify(error));
+            console.error('EmailJS error — status:', error && error.status, '| text:', reason);
             alert('Failed to send message. Please try again later.');
             btn.innerHTML = originalHTML;
             btn.disabled  = false;
