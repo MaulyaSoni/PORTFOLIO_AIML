@@ -7,11 +7,10 @@ lucide.createIcons();
 // Values sourced from .env — inlined here since this is a static site.
 // ──────────────────────────────
 const EMAILJS_SERVICE_ID  = 'service_np6ssnj';
+const EMAILJS_TEMPLATE_ID = 'template_9l7h8qj';
 const EMAILJS_PUBLIC_KEY  = 'YbL2pSvJQnCAd30RY';
-// Template ID is temporarily removed; uncomment when ready:
-// const EMAILJS_TEMPLATE_ID = 'template_9l7h8qj';
 
-emailjs.init(EMAILJS_PUBLIC_KEY);
+emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
 // ──────────────────────────────
 // Loading Animation
@@ -268,8 +267,13 @@ document.getElementById('contact-form').addEventListener('submit', function (e) 
     btn.innerHTML = '<span class="animate-spin">⟳</span> Sending...';
     btn.disabled  = true;
 
-    // Restore template ID here when ready: emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, this)
-    emailjs.sendForm(EMAILJS_SERVICE_ID, 'template_9l7h8qj', this)
+    const templateParams = {
+        user_name:  this.querySelector('[name="user_name"]').value,
+        user_email: this.querySelector('[name="user_email"]').value,
+        message:    this.querySelector('[name="message"]').value,
+    };
+
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
         .then(() => {
             const successMsg = document.getElementById('success-message');
             successMsg.classList.remove('hidden');
@@ -278,8 +282,9 @@ document.getElementById('contact-form').addEventListener('submit', function (e) 
             btn.disabled  = false;
             setTimeout(() => successMsg.classList.add('hidden'), 5000);
         })
-        .catch(() => {
-            alert('Failed to send message. Please try again.');
+        .catch((error) => {
+            console.error('EmailJS error:', error);
+            alert('Failed to send message. Please try again later.');
             btn.innerHTML = originalHTML;
             btn.disabled  = false;
         });
