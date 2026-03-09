@@ -332,6 +332,34 @@ window.addEventListener('scroll', () => {
 });
 
 // ──────────────────────────────
+// Active Nav Highlight on Scroll
+// ──────────────────────────────
+const navSections = document.querySelectorAll('section[id]');
+const navLinks    = document.querySelectorAll('.nav-link[href^="#"]');
+
+function updateActiveNav() {
+    const scrollPos = window.scrollY + 160;
+
+    navSections.forEach(section => {
+        const top    = section.offsetTop;
+        const bottom = top + section.offsetHeight;
+        const id     = section.getAttribute('id');
+
+        if (scrollPos >= top && scrollPos < bottom) {
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${id}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+    });
+}
+
+window.addEventListener('scroll', updateActiveNav, { passive: true });
+updateActiveNav();
+
+// ──────────────────────────────
 // Resize Handler (Three.js camera + renderer)
 // ──────────────────────────────
 window.addEventListener('resize', () => {
